@@ -3,6 +3,7 @@ package test;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
@@ -35,10 +36,13 @@ public class RoutingTest extends TestCase {
 		
 		env.put(Rack.PATH_INFO, "/lala/thing");
 		check(200, "Stub OK");
+		
+		env.put(Rack.PATH_INFO, "/thing/lala");
+		check(200, "Stub OK");
 	}
 	
-	public void testRootPath() throws Exception {
-		router.addPathRoute("/", new RackStub("OK"));
+	public void testRootPrefixPath() throws Exception {
+		router.addPathPrefixRoute("/", new RackStub("OK"));
 		
 		// no path specified
 		check(404, "No Matching Route");
@@ -47,6 +51,41 @@ public class RoutingTest extends TestCase {
 		check(200, "Stub OK");
 		
 		env.put(Rack.PATH_INFO, "/lala/thing");
+		check(200, "Stub OK");
+		
+		env.put(Rack.PATH_INFO, "/thing/lala");
+		check(200, "Stub OK");
+	}
+	
+	public void testNonRootPrefixPath() throws Exception {
+		router.addPathPrefixRoute("/lala/", new RackStub("OK"));
+		
+		// no path specified
+		check(404, "No Matching Route");
+		
+		env.put(Rack.PATH_INFO, "/");
+		check(404, "No Matching Route");
+		
+		env.put(Rack.PATH_INFO, "/lala/thing");
+		check(200, "Stub OK");
+		
+		env.put(Rack.PATH_INFO, "/thing/lala");
+		check(404, "No Matching Route");
+	}
+	
+	public void testPatternPath() throws Exception {
+		router.addPathPatternRoute(Pattern.compile(".*/thing.*"), new RackStub("OK"));
+		
+		// no path specified
+		check(404, "No Matching Route");
+		
+		env.put(Rack.PATH_INFO, "/");
+		check(404, "No Matching Route");
+		
+		env.put(Rack.PATH_INFO, "/lala/thing");
+		check(200, "Stub OK");
+		
+		env.put(Rack.PATH_INFO, "/thing/lala");
 		check(200, "Stub OK");
 	}
 
