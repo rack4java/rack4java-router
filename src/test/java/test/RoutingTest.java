@@ -7,11 +7,11 @@ import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
-import org.rack4java.PathPatternRoute;
-import org.rack4java.PathPrefixRoute;
 import org.rack4java.Rack;
 import org.rack4java.RackResponse;
 import org.rack4java.RackRouter;
+import org.rack4java.route.PathPatternRoute;
+import org.rack4java.route.PathPrefixRoute;
 
 public class RoutingTest extends TestCase {
 	Map<String, Object> env;

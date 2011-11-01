@@ -1,7 +1,9 @@
-package org.rack4java;
+package org.rack4java.route;
 
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import org.rack4java.Rack;
 
 public class PathPatternRoute extends AbstractRoute {
 	private Pattern pattern;
