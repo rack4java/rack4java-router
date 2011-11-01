@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
+import org.rack4java.CatchAllRoute;
+import org.rack4java.PathRoute;
 import org.rack4java.Rack;
 import org.rack4java.RackResponse;
 import org.rack4java.RackRouter;
@@ -25,7 +27,7 @@ public class RoutingTest extends TestCase {
 		check(404, "No Matching Route");
 	}
 	
-	public void testCatchAll() throws Exception {
+	public void testSingleCatchAll() throws Exception {
 		router.addCatchAll(new RackStub("OK"));
 		
 		// no path specified
@@ -41,8 +43,8 @@ public class RoutingTest extends TestCase {
 		check(200, "Stub OK");
 	}
 	
-	public void testRootPrefixPath() throws Exception {
-		router.addPathPrefixRoute("/", new RackStub("OK"));
+	public void testSingleRootPrefixPath() throws Exception {
+		router.addRoute(new PathRoute(new RackStub("OK"), "/"));
 		
 		// no path specified
 		check(404, "No Matching Route");
@@ -57,8 +59,8 @@ public class RoutingTest extends TestCase {
 		check(200, "Stub OK");
 	}
 	
-	public void testNonRootPrefixPath() throws Exception {
-		router.addPathPrefixRoute("/lala/", new RackStub("OK"));
+	public void testSinglePatternPath() throws Exception {
+		router.addRoute(new PathRoute(new RackStub("OK"), Pattern.compile(".*/thing.*")));
 		
 		// no path specified
 		check(404, "No Matching Route");
@@ -70,23 +72,24 @@ public class RoutingTest extends TestCase {
 		check(200, "Stub OK");
 		
 		env.put(Rack.PATH_INFO, "/thing/lala");
-		check(404, "No Matching Route");
+		check(200, "Stub OK");
 	}
 	
-	public void testPatternPath() throws Exception {
-		router.addPathPatternRoute(Pattern.compile(".*/thing.*"), new RackStub("OK"));
+	public void testPathFallback() throws Exception {
+		router.addRoute(new PathRoute(new RackStub("OK"), "/lala/"));
+		router.addCatchAll(new RackStub("huh?"));
 		
 		// no path specified
-		check(404, "No Matching Route");
+		check(200, "Stub huh?");
 		
 		env.put(Rack.PATH_INFO, "/");
-		check(404, "No Matching Route");
+		check(200, "Stub huh?");
 		
 		env.put(Rack.PATH_INFO, "/lala/thing");
 		check(200, "Stub OK");
 		
 		env.put(Rack.PATH_INFO, "/thing/lala");
-		check(200, "Stub OK");
+		check(200, "Stub huh?");
 	}
 
 	public void check(int expectedStatus, String expectedMessage) throws Exception, IOException {
