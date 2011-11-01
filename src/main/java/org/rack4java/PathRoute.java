@@ -2,13 +2,12 @@ package org.rack4java;
 
 import java.util.Map;
 
-public class PathRoute implements Route {
+public class PathRoute extends AbstractRoute {
 	private String pattern;
-	private Rack handler;
 	
 	public PathRoute(String pattern, Rack handler) {
+		super(handler);
 		this.pattern = pattern;
-		this.handler = handler;
 	}
 	
 	@Override public boolean match(Map<String, Object> env) {
@@ -16,9 +15,5 @@ public class PathRoute implements Route {
 		
 		String path = (String) env.get(Rack.PATH_INFO);
 		return path.matches(pattern);
-	}
-	
-	@Override public RackResponse call(Map<String, Object> env) throws Exception {
-		return handler.call(env);
 	}
 }
