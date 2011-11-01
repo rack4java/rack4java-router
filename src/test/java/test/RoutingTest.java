@@ -21,7 +21,7 @@ public class RoutingTest extends TestCase {
 	}
 	
 	public void testNoRouting() throws Exception {
-		check(404, "No Routes");
+		check(404, "No Matching Route");
 	}
 	
 	public void testCatchAll() throws Exception {
@@ -29,6 +29,19 @@ public class RoutingTest extends TestCase {
 		
 		// no path specified
 		check(200, "Stub OK");
+		
+		env.put(Rack.PATH_INFO, "/");
+		check(200, "Stub OK");
+		
+		env.put(Rack.PATH_INFO, "/lala/thing");
+		check(200, "Stub OK");
+	}
+	
+	public void testRootPath() throws Exception {
+		router.addPathRoute("/", new RackStub("OK"));
+		
+		// no path specified
+		check(404, "No Matching Route");
 		
 		env.put(Rack.PATH_INFO, "/");
 		check(200, "Stub OK");

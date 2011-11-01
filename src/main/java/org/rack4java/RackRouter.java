@@ -15,7 +15,7 @@ public class RackRouter implements Rack {
 		for (Route route : routes) {
 			if (route.match(env)) return route.call(env);
 		}
-		return new RackResponse(404, "No Routes");
+		return new RackResponse(404, "No Matching Route");
 	}
 
 	public void addPathRoute(String pattern, Rack handler) {
