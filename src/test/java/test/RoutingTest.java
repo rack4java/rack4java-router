@@ -22,6 +22,13 @@ public class RoutingTest extends TestCase {
 		call();
 		assertEquals(404, response.getStatus());
 	}
+	
+	public void testCatchAll() throws Exception {
+		router.addRoute("*", new RackStub());
+		call();
+		assertEquals(200, response.getStatus());
+		assertEquals("Stub OK", response.getString());
+	}
 
 	public void call() throws Exception {
 		response = router.call(env);
