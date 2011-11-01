@@ -18,12 +18,12 @@ public class RackRouter implements Rack {
 		return new RackResponse(404, "No Matching Route");
 	}
 
-	public void addPathRoute(String pattern, Rack handler) {
-		routes.add(new PathRoute(pattern, handler));
+	public void addPathRoute(String prefix, Rack handler) {
+		routes.add(new PathRoute(handler, prefix));
 	}
 
 	public void addCatchAll(Rack handler) {
-		routes.add(new PathRoute(PathRoute.ALL, handler));
+		routes.add(new CatchAllRoute(handler));
 	}
 
 }

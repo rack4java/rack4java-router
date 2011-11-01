@@ -4,21 +4,23 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class PathRoute extends AbstractRoute {
-	public static final String ALL = ".*";
+	private String prefix;
+	private Pattern pattern;
 	
-	private String pattern;
-	private Pattern compiled;
+	public PathRoute(Rack handler, String prefix) {
+		super(handler);
+		this.prefix = prefix;
+	}
 	
-	public PathRoute(String pattern, Rack handler) {
+	public PathRoute(Rack handler, Pattern pattern) {
 		super(handler);
 		this.pattern = pattern;
-		this.compiled = Pattern.compile(pattern);
 	}
 	
 	@Override public boolean match(Map<String, Object> env) {
-		if (ALL.equals(pattern)) return true;
-		
 		String path = (String) env.get(Rack.PATH_INFO);
-		return null != path && compiled.matcher(path).find();
+		if (null == path) return false;
+		if (null != pattern) return pattern.matcher(path).matches();
+		return path.startsWith(prefix);
 	}
 }
