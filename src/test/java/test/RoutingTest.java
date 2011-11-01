@@ -1,10 +1,13 @@
 package test;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.rack4java.PathRoute;
+import org.rack4java.Rack;
 import org.rack4java.RackResponse;
 import org.rack4java.RackRouter;
 
@@ -19,18 +22,25 @@ public class RoutingTest extends TestCase {
 	}
 	
 	public void testNoRouting() throws Exception {
-		call();
-		assertEquals(404, response.getStatus());
+		check(404, "No Routes");
 	}
 	
 	public void testCatchAll() throws Exception {
-		router.addRoute("*", new RackStub());
-		call();
-		assertEquals(200, response.getStatus());
-		assertEquals("Stub OK", response.getString());
+		router.addRoute(PathRoute.ALL, new RackStub());
+		
+		// no path specified
+		check(200, "Stub OK");
+		
+		env.put(Rack.PATH_INFO, "/");
+		check(200, "Stub OK");
+		
+		env.put(Rack.PATH_INFO, "/lala/thing");
+		check(200, "Stub OK");
 	}
 
-	public void call() throws Exception {
+	public void check(int expectedStatus, String expectedMessage) throws Exception, IOException {
 		response = router.call(env);
+		assertEquals(expectedStatus, response.getStatus());
+		assertEquals(expectedMessage, response.getString());
 	}
 }
