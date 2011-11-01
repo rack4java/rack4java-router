@@ -7,8 +7,8 @@ import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
-import org.rack4java.CatchAllRoute;
-import org.rack4java.PathRoute;
+import org.rack4java.PathPatternRoute;
+import org.rack4java.PathPrefixRoute;
 import org.rack4java.Rack;
 import org.rack4java.RackResponse;
 import org.rack4java.RackRouter;
@@ -44,7 +44,7 @@ public class RoutingTest extends TestCase {
 	}
 	
 	public void testSingleRootPrefixPath() throws Exception {
-		router.addRoute(new PathRoute(new RackStub("OK"), "/"));
+		router.addRoute(new PathPrefixRoute(new RackStub("OK"), "/"));
 		
 		// no path specified
 		check(404, "No Matching Route");
@@ -60,7 +60,7 @@ public class RoutingTest extends TestCase {
 	}
 	
 	public void testSinglePatternPath() throws Exception {
-		router.addRoute(new PathRoute(new RackStub("OK"), Pattern.compile(".*/thing.*")));
+		router.addRoute(new PathPatternRoute(new RackStub("OK"), Pattern.compile(".*/thing.*")));
 		
 		// no path specified
 		check(404, "No Matching Route");
@@ -76,7 +76,7 @@ public class RoutingTest extends TestCase {
 	}
 	
 	public void testPathFallback() throws Exception {
-		router.addRoute(new PathRoute(new RackStub("OK"), "/lala/"));
+		router.addRoute(new PathPrefixRoute(new RackStub("OK"), "/lala/"));
 		router.addCatchAll(new RackStub("huh?"));
 		
 		// no path specified
