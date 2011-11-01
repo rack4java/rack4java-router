@@ -6,7 +6,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.rack4java.PathRoute;
 import org.rack4java.Rack;
 import org.rack4java.RackResponse;
 import org.rack4java.RackRouter;
@@ -26,7 +25,7 @@ public class RoutingTest extends TestCase {
 	}
 	
 	public void testCatchAll() throws Exception {
-		router.addRoute(PathRoute.ALL, new RackStub());
+		router.addCatchAll(new RackStub("OK"));
 		
 		// no path specified
 		check(200, "Stub OK");
