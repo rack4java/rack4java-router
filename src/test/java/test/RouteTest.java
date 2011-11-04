@@ -17,72 +17,109 @@ public class RouteTest extends TestCase {
 	Map<String, Object> env;
 	Route route;
 	RackResponse response;
+	RackStub ok;
 	
 	public void setUp() {
 		env = new HashMap<String, Object>();
+		ok = new RackStub("OK");
 	}
 	
 	public void testCatchAll() throws Exception {
-		route = new CatchAllRoute(new RackStub("OK"));
+		route = new CatchAllRoute(ok);
 		
 		// no path specified
-		assertTrue(route.match(env));
+		assertMatch();
 		
 		env.put(Rack.PATH_INFO, "/");
-		assertTrue(route.match(env));
+		assertMatch();
 		
 		env.put(Rack.PATH_INFO, "/lala/thing");
-		assertTrue(route.match(env));
+		assertMatch();
 		
 		env.put(Rack.PATH_INFO, "/thing/lala");
-		assertTrue(route.match(env));
+		assertMatch();
 	}
 	
 	public void testRootPrefixPathWithoutRemove() throws Exception {
-		route = new PathPrefixRoute(new RackStub("OK"), "/", false);
+		route = new PathPrefixRoute(ok, "/", false);
 		
 		// no path specified
-		assertFalse(route.match(env));
+		assertNoMatch();
 		
 		env.put(Rack.PATH_INFO, "/");
-		assertTrue(route.match(env));
+		assertMatch();
+		assertEquals("/", ok.getRecordedValue(Rack.PATH_INFO));
 		
 		env.put(Rack.PATH_INFO, "/lala/thing");
-		assertTrue(route.match(env));
+		assertMatch();
+		assertEquals("/lala/thing", ok.getRecordedValue(Rack.PATH_INFO));
 		
 		env.put(Rack.PATH_INFO, "/thing/lala");
-		assertTrue(route.match(env));
+		assertMatch();
+		assertEquals("/thing/lala", ok.getRecordedValue(Rack.PATH_INFO));
 	}
 	
-	public void testNonRootPrefixPath() throws Exception {
-		route = new PathPrefixRoute(new RackStub("OK"), "/lala/", false);
+	public void testRootPrefixPathWithRemove() throws Exception {
+		route = new PathPrefixRoute(ok, "/", false);
 		
 		// no path specified
-		assertFalse(route.match(env));
+		assertNoMatch();
 		
 		env.put(Rack.PATH_INFO, "/");
-		assertFalse(route.match(env));
+		assertMatch();
+		assertEquals("/", ok.getRecordedValue(Rack.PATH_INFO));
 		
 		env.put(Rack.PATH_INFO, "/lala/thing");
-		assertTrue(route.match(env));
+		assertMatch();
+		assertEquals("/lala/thing", ok.getRecordedValue(Rack.PATH_INFO));
 		
 		env.put(Rack.PATH_INFO, "/thing/lala");
-		assertFalse(route.match(env));
+		assertMatch();
+		assertEquals("/thing/lala", ok.getRecordedValue(Rack.PATH_INFO));
+	}
+	
+	public void testNonRootPrefixPathWithoutRemove() throws Exception {
+		route = new PathPrefixRoute(ok, "/lala/", false);
+		
+		// no path specified
+		assertNoMatch();
+		
+		env.put(Rack.PATH_INFO, "/");
+		assertNoMatch();
+		
+		env.put(Rack.PATH_INFO, "/lala/thing");
+		assertMatch();
+		assertEquals("/lala/thing", ok.getRecordedValue(Rack.PATH_INFO));
+		
+		env.put(Rack.PATH_INFO, "/thing/lala");
+		assertNoMatch();
 	}
 	
 	public void testPatternPath() throws Exception {
-		route = new PathPatternRoute(new RackStub("OK"), Pattern.compile(".*/thing.*"));
+		route = new PathPatternRoute(ok, Pattern.compile(".*/thing.*"));
 		
 		// no path specified
-		assertFalse(route.match(env));
+		assertNoMatch();
 		
 		env.put(Rack.PATH_INFO, "/");
-		assertFalse(route.match(env));
+		assertNoMatch();
 		
 		env.put(Rack.PATH_INFO, "/lala/thing");
-		assertTrue(route.match(env));
+		assertMatch();
+		assertEquals("/lala/thing", ok.getRecordedValue(Rack.PATH_INFO));
 		
 		env.put(Rack.PATH_INFO, "/thing/lala");
+		assertMatch();
+		assertEquals("/thing/lala", ok.getRecordedValue(Rack.PATH_INFO));
+	}
+
+	public void assertNoMatch() throws Exception {
+		assertFalse(route.match(env));
+	}
+
+	public void assertMatch() throws Exception {
 		assertTrue(route.match(env));
+		ok.reset();
+		route.call(env);
 	}
 }
