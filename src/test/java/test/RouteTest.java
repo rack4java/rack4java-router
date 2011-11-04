@@ -153,6 +153,23 @@ public class RouteTest extends TestCase {
 		assertEquals("/lala", ok.getRecordedValue(Rack.PATH_INFO));
 		assertEquals("/thing/lala", ok.getRecordedValue(PathPrefixRoute.ORIGINAL_PATH_INFO));
 	}
+	
+	public void testPatternHeaderWithoutReplace() throws Exception {
+		route = new HeaderPatternRoute(ok, "X-Mode", Pattern.compile("[0-9]*"));
+		
+		// no headers specified
+		assertNoMatch();
+		
+		env.put(Rack.HTTP_ + "lala", "12");
+		assertNoMatch();
+		
+		env.put(Rack.HTTP_ + "X-Mode", "abc");
+		assertNoMatch();
+		
+		env.put(Rack.HTTP_ + "X-Mode", "12");
+		assertMatch();
+		assertEquals("12", ok.getRecordedValue(Rack.HTTP_ + "X-Mode"));
+	}
 
 	public void assertNoMatch() throws Exception {
 		assertNull(route.match(env));
