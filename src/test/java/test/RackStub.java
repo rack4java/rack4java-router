@@ -8,7 +8,7 @@ import org.rack4java.RackResponse;
 
 public class RackStub implements Rack {
 
-	private String message;
+	private final String message;
 	private Map<String, Object> recorded;
 
 	public RackStub(String message) {
@@ -27,6 +27,10 @@ public class RackStub implements Rack {
 
 	public boolean wasCalled() {
 		return null != recorded;
+	}
+
+	public void reset() {
+		recorded = null;
 	}
 
 }

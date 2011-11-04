@@ -29,6 +29,15 @@ public class RoutingTest extends TestCase {
 	
 	public void testNoRouting() throws Exception {
 		check(404, "No Matching Route");
+		
+		env.put(Rack.PATH_INFO, "/");
+		check(404, "No Matching Route");
+		
+		env.put(Rack.PATH_INFO, "/lala/thing");
+		check(404, "No Matching Route");
+		
+		env.put(Rack.PATH_INFO, "/thing/lala");
+		check(404, "No Matching Route");
 	}
 	
 	public void testSingleCatchAll() throws Exception {
@@ -47,7 +56,7 @@ public class RoutingTest extends TestCase {
 		check(200, "Stub OK");
 	}
 	
-	public void testSingleRootPrefixPath() throws Exception {
+	public void testSingleRoute() throws Exception {
 		router.addRoute(new PathPrefixRoute(ok, "/", false));
 		
 		// no path specified
@@ -63,23 +72,7 @@ public class RoutingTest extends TestCase {
 		check(200, "Stub OK");
 	}
 	
-	public void testSinglePatternPathWithoutRemove() throws Exception {
-		router.addRoute(new PathPatternRoute(ok, Pattern.compile(".*/thing.*")));
-		
-		// no path specified
-		check(404, "No Matching Route");
-		
-		env.put(Rack.PATH_INFO, "/");
-		check(404, "No Matching Route");
-		
-		env.put(Rack.PATH_INFO, "/lala/thing");
-		check(200, "Stub OK");
-		
-		env.put(Rack.PATH_INFO, "/thing/lala");
-		check(200, "Stub OK");
-	}
-	
-	public void testPathFallback() throws Exception {
+	public void testRouteFallback() throws Exception {
 		router.addRoute(new PathPrefixRoute(ok, "/lala/", false));
 		router.addCatchAll(catcher);
 		
@@ -90,9 +83,13 @@ public class RoutingTest extends TestCase {
 		
 		env.put(Rack.PATH_INFO, "/");
 		check(200, "Stub huh?");
+		assertFalse(ok.wasCalled());
+		assertEnvValue(catcher, Rack.PATH_INFO, "/");
 		
 		env.put(Rack.PATH_INFO, "/lala/thing");
 		check(200, "Stub OK");
+		assertFalse(catcher.wasCalled());
+		assertEnvValue(ok, Rack.PATH_INFO, "/lala/thing");
 		
 		env.put(Rack.PATH_INFO, "/thing/lala");
 		check(200, "Stub huh?");
@@ -105,6 +102,8 @@ public class RoutingTest extends TestCase {
 	}
 
 	public void check(int expectedStatus, String expectedMessage) throws Exception, IOException {
+		ok.reset();
+		catcher.reset();
 		response = router.call(env);
 		assertEquals(expectedStatus, response.getStatus());
 		assertEquals(expectedMessage, response.getString());
