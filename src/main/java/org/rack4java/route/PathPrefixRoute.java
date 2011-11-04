@@ -5,6 +5,8 @@ import java.util.Map;
 import org.rack4java.Rack;
 
 public class PathPrefixRoute extends AbstractRoute {
+	public static final String ORIGINAL_PATH_INFO = "ORIGINAL_" + Rack.PATH_INFO;
+	
 	private String prefix;
 	private boolean remove;
 	
@@ -17,6 +19,15 @@ public class PathPrefixRoute extends AbstractRoute {
 	@Override public boolean match(Map<String, Object> env) {
 		String path = (String) env.get(Rack.PATH_INFO);
 		if (null == path || null == prefix) return false;
-		return path.startsWith(prefix);
+		boolean ret = path.startsWith(prefix);
+		
+		if (ret && remove) {
+			env.put(ORIGINAL_PATH_INFO, path);
+			String tail = path.substring(prefix.length());
+			if (!tail.startsWith("/")) tail = "/" + tail;
+			env.put(PATH_INFO, tail);
+		}
+		
+		return ret;
 	}
 }

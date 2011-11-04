@@ -95,6 +95,24 @@ public class RouteTest extends TestCase {
 		assertNoMatch();
 	}
 	
+	public void testNonRootPrefixPathWithRemove() throws Exception {
+		route = new PathPrefixRoute(ok, "/lala/", true);
+		
+		// no path specified
+		assertNoMatch();
+		
+		env.put(Rack.PATH_INFO, "/");
+		assertNoMatch();
+		
+		env.put(Rack.PATH_INFO, "/lala/thing");
+		assertMatch();
+		assertEquals("/thing", ok.getRecordedValue(Rack.PATH_INFO));
+		assertEquals("/lala/thing", ok.getRecordedValue(PathPrefixRoute.ORIGINAL_PATH_INFO));
+		
+		env.put(Rack.PATH_INFO, "/thing/lala");
+		assertNoMatch();
+	}
+	
 	public void testPatternPath() throws Exception {
 		route = new PathPatternRoute(ok, Pattern.compile(".*/thing.*"));
 		
