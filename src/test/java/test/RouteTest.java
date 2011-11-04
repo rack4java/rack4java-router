@@ -155,12 +155,13 @@ public class RouteTest extends TestCase {
 	}
 
 	public void assertNoMatch() throws Exception {
-		assertFalse(route.match(env));
+		assertNull(route.match(env));
 	}
 
 	public void assertMatch() throws Exception {
-		assertTrue(route.match(env));
+		Rack target = route.match(env);
+		assertNotNull(target);
 		ok.reset();
-		route.call(env);
+		target.call(env);
 	}
 }

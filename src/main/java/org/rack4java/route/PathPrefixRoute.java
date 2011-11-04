@@ -16,10 +16,10 @@ public class PathPrefixRoute extends AbstractPathRoute {
 		this.remove = remove;
 	}
 	
-	@Override public boolean match(Map<String, Object> env) {
+	@Override public Rack match(Map<String, Object> env) {
 		String path = (String) env.get(Rack.PATH_INFO);
-		if (null == path || null == prefix) return false;
-		return path.startsWith(prefix);
+		if (null == path || null == prefix) return null;
+		return path.startsWith(prefix) ? this : null;
 	}
 	
 	@Override public RackResponse call(Map<String, Object> env) throws Exception {

@@ -6,7 +6,7 @@ import org.rack4java.Rack;
 import org.rack4java.RackResponse;
 import org.rack4java.Route;
 
-public abstract class AbstractRoute implements Route {
+public abstract class AbstractRoute implements Route, Rack {
 	protected Rack handler;
 	
 	public AbstractRoute(Rack handler) {

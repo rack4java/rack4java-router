@@ -6,18 +6,26 @@ import java.util.Map;
 
 import org.rack4java.route.CatchAllRoute;
 
-public class RackRouter implements Rack {
+public class RackRouter implements Route, Rack {
 	private List<Route> routes;
 	
 	public RackRouter() {
 		this.routes = new ArrayList<Route>();
 	}
 
-	@Override public RackResponse call(Map<String, Object> env) throws Exception {
+	@Override public Rack match(Map<String, Object> environment) {
 		for (Route route : routes) {
-			if (route.match(env)) return route.call(env);
+			Rack target = route.match(environment);
+			if (null != target) return target;
 		}
-		return new RackResponse(404, "No Matching Route");
+		return null;
+	}
+
+	@Override public RackResponse call(Map<String, Object> environment) throws Exception {
+		Rack target = match(environment);
+		return null != target 
+			? target.call(environment)
+			: new RackResponse(404, "No Matching Route");
 	}
 	
 	public void addRoute(Route route) {

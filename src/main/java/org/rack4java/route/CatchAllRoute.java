@@ -10,8 +10,8 @@ public class CatchAllRoute extends AbstractRoute {
 		super(handler);
 	}
 
-	@Override public boolean match(Map<String, Object> env) {
-		return true;
+	@Override public Rack match(Map<String, Object> env) {
+		return this;
 	}
 
 }

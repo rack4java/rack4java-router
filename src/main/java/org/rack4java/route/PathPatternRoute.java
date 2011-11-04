@@ -20,10 +20,10 @@ public class PathPatternRoute extends AbstractPathRoute {
 		this(handler, pattern, null);
 	}
 
-	@Override public boolean match(Map<String, Object> env) {
+	@Override public Rack match(Map<String, Object> env) {
 		String path = (String) env.get(Rack.PATH_INFO);
-		if (null == path || null == pattern) return false;
-		return pattern.matcher(path).matches();
+		if (null == path || null == pattern) return null;
+		return pattern.matcher(path).matches() ? this : null;
 	}
 	
 	@Override public RackResponse call(Map<String, Object> env) throws Exception {
