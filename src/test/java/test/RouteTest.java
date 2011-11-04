@@ -32,12 +32,15 @@ public class RouteTest extends TestCase {
 		
 		env.put(Rack.PATH_INFO, "/");
 		assertMatch();
+		assertEquals("/", ok.getRecordedValue(Rack.PATH_INFO));
 		
 		env.put(Rack.PATH_INFO, "/lala/thing");
 		assertMatch();
+		assertEquals("/lala/thing", ok.getRecordedValue(Rack.PATH_INFO));
 		
 		env.put(Rack.PATH_INFO, "/thing/lala");
 		assertMatch();
+		assertEquals("/thing/lala", ok.getRecordedValue(Rack.PATH_INFO));
 	}
 	
 	public void testRootPrefixPathWithoutRemove() throws Exception {
