@@ -38,8 +38,8 @@ public class RouteTest extends TestCase {
 		assertTrue(route.match(env));
 	}
 	
-	public void testRootPrefixPath() throws Exception {
-		route = new PathPrefixRoute(new RackStub("OK"), "/");
+	public void testRootPrefixPathWithoutRemove() throws Exception {
+		route = new PathPrefixRoute(new RackStub("OK"), "/", false);
 		
 		// no path specified
 		assertFalse(route.match(env));
@@ -55,7 +55,7 @@ public class RouteTest extends TestCase {
 	}
 	
 	public void testNonRootPrefixPath() throws Exception {
-		route = new PathPrefixRoute(new RackStub("OK"), "/lala/");
+		route = new PathPrefixRoute(new RackStub("OK"), "/lala/", false);
 		
 		// no path specified
 		assertFalse(route.match(env));

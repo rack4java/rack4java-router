@@ -17,10 +17,14 @@ public class RoutingTest extends TestCase {
 	Map<String, Object> env;
 	RackRouter router;
 	RackResponse response;
+	RackStub ok;
+	RackStub catcher;
 	
 	public void setUp() {
 		env = new HashMap<String, Object>();
 		router = new RackRouter();
+		ok = new RackStub("OK");
+		catcher = new RackStub("huh?");
 	}
 	
 	public void testNoRouting() throws Exception {
@@ -28,7 +32,7 @@ public class RoutingTest extends TestCase {
 	}
 	
 	public void testSingleCatchAll() throws Exception {
-		router.addCatchAll(new RackStub("OK"));
+		router.addCatchAll(ok);
 		
 		// no path specified
 		check(200, "Stub OK");
@@ -44,7 +48,7 @@ public class RoutingTest extends TestCase {
 	}
 	
 	public void testSingleRootPrefixPath() throws Exception {
-		router.addRoute(new PathPrefixRoute(new RackStub("OK"), "/"));
+		router.addRoute(new PathPrefixRoute(ok, "/", false));
 		
 		// no path specified
 		check(404, "No Matching Route");
@@ -59,8 +63,8 @@ public class RoutingTest extends TestCase {
 		check(200, "Stub OK");
 	}
 	
-	public void testSinglePatternPath() throws Exception {
-		router.addRoute(new PathPatternRoute(new RackStub("OK"), Pattern.compile(".*/thing.*")));
+	public void testSinglePatternPathWithoutRemove() throws Exception {
+		router.addRoute(new PathPatternRoute(ok, Pattern.compile(".*/thing.*")));
 		
 		// no path specified
 		check(404, "No Matching Route");
@@ -76,11 +80,13 @@ public class RoutingTest extends TestCase {
 	}
 	
 	public void testPathFallback() throws Exception {
-		router.addRoute(new PathPrefixRoute(new RackStub("OK"), "/lala/"));
-		router.addCatchAll(new RackStub("huh?"));
+		router.addRoute(new PathPrefixRoute(ok, "/lala/", false));
+		router.addCatchAll(catcher);
 		
 		// no path specified
 		check(200, "Stub huh?");
+		assertFalse(ok.wasCalled());
+		assertEnvValue(catcher, Rack.PATH_INFO, null);
 		
 		env.put(Rack.PATH_INFO, "/");
 		check(200, "Stub huh?");
@@ -90,6 +96,12 @@ public class RoutingTest extends TestCase {
 		
 		env.put(Rack.PATH_INFO, "/thing/lala");
 		check(200, "Stub huh?");
+	}
+
+	private void assertEnvValue(RackStub stub, String key, Object expected) {
+		assertNotNull(stub);
+		Object actual = stub.getRecordedValue(key);
+		assertEquals(expected, actual);
 	}
 
 	public void check(int expectedStatus, String expectedMessage) throws Exception, IOException {
