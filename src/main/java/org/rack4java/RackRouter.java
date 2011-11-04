@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.rack4java.route.CatchAllRoute;
-
 public class RackRouter implements Route, Rack {
 	private List<Route> routes;
 	private Rack dfl;
