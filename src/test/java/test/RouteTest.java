@@ -116,7 +116,7 @@ public class RouteTest extends TestCase {
 		assertNoMatch();
 	}
 	
-	public void testPatternPath() throws Exception {
+	public void testPatternPathWithoutReplace() throws Exception {
 		route = new PathPatternRoute(ok, Pattern.compile(".*/thing.*"));
 		
 		// no path specified
@@ -132,6 +132,26 @@ public class RouteTest extends TestCase {
 		env.put(Rack.PATH_INFO, "/thing/lala");
 		assertMatch();
 		assertEquals("/thing/lala", ok.getRecordedValue(Rack.PATH_INFO));
+	}
+	
+	public void testPatternPathWithReplace() throws Exception {
+		route = new PathPatternRoute(ok, Pattern.compile("(.*)/thing(.*)"), "$1$2");
+		
+		// no path specified
+		assertNoMatch();
+		
+		env.put(Rack.PATH_INFO, "/");
+		assertNoMatch();
+		
+		env.put(Rack.PATH_INFO, "/lala/thing");
+		assertMatch();
+		assertEquals("/lala", ok.getRecordedValue(Rack.PATH_INFO));
+		assertEquals("/lala/thing", ok.getRecordedValue(PathPrefixRoute.ORIGINAL_PATH_INFO));
+		
+		env.put(Rack.PATH_INFO, "/thing/lala");
+		assertMatch();
+		assertEquals("/lala", ok.getRecordedValue(Rack.PATH_INFO));
+		assertEquals("/thing/lala", ok.getRecordedValue(PathPrefixRoute.ORIGINAL_PATH_INFO));
 	}
 
 	public void assertNoMatch() throws Exception {

@@ -5,8 +5,7 @@ import java.util.Map;
 import org.rack4java.Rack;
 import org.rack4java.RackResponse;
 
-public class PathPrefixRoute extends AbstractRoute {
-	public static final String ORIGINAL_PATH_INFO = "ORIGINAL_" + Rack.PATH_INFO;
+public class PathPrefixRoute extends AbstractPathRoute {
 	
 	private String prefix;
 	private boolean remove;
