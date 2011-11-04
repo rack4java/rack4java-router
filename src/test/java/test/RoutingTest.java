@@ -39,7 +39,7 @@ public class RoutingTest extends TestCase {
 	}
 	
 	public void testSingleCatchAll() throws Exception {
-		router.addCatchAll(ok);
+		router.setDefaultHandler(ok);
 		
 		// no path specified
 		check(200, "Stub OK");
@@ -72,7 +72,30 @@ public class RoutingTest extends TestCase {
 	
 	public void testRouteFallback() throws Exception {
 		router.addRoute(new PathPrefixRoute(ok, "/lala/", false));
-		router.addCatchAll(catcher);
+		router.setDefaultHandler(catcher);
+		
+		// no path specified
+		check(200, "Stub huh?");
+		assertFalse(ok.wasCalled());
+		assertEquals(null, catcher.getRecordedValue(Rack.PATH_INFO));
+		
+		env.put(Rack.PATH_INFO, "/");
+		check(200, "Stub huh?");
+		assertFalse(ok.wasCalled());
+		assertEquals("/", catcher.getRecordedValue(Rack.PATH_INFO));
+		
+		env.put(Rack.PATH_INFO, "/lala/thing");
+		check(200, "Stub OK");
+		assertFalse(catcher.wasCalled());
+		assertEquals("/lala/thing", ok.getRecordedValue(Rack.PATH_INFO));
+		
+		env.put(Rack.PATH_INFO, "/thing/lala");
+		check(200, "Stub huh?");
+	}
+	
+	public void testCatchAllFloatsToEnd() throws Exception {
+		router.setDefaultHandler(catcher);
+		router.addRoute(new PathPrefixRoute(ok, "/lala/", false));
 		
 		// no path specified
 		check(200, "Stub huh?");

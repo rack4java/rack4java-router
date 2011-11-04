@@ -8,9 +8,11 @@ import org.rack4java.route.CatchAllRoute;
 
 public class RackRouter implements Route, Rack {
 	private List<Route> routes;
+	private Rack dfl;
 	
 	public RackRouter() {
 		this.routes = new ArrayList<Route>();
+		this.dfl = null;
 	}
 
 	@Override public Rack match(Map<String, Object> environment) {
@@ -18,7 +20,7 @@ public class RackRouter implements Route, Rack {
 			Rack target = route.match(environment);
 			if (null != target) return target;
 		}
-		return null;
+		return dfl;
 	}
 
 	@Override public RackResponse call(Map<String, Object> environment) throws Exception {
@@ -32,8 +34,8 @@ public class RackRouter implements Route, Rack {
 		routes.add(route); 
 	}
 
-	public void addCatchAll(Rack handler) {
-		addRoute(new CatchAllRoute(handler));
+	public void setDefaultHandler(Rack handler) {
+		dfl = handler;
 	}
 
 }
