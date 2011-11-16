@@ -24,7 +24,7 @@ public class RackRouter implements Route, Rack {
 		Rack target = match(environment);
 		return null != target 
 			? target.call(environment)
-			: new RackResponse(404, "No Matching Route");
+			: new RackResponse(404).withBody("No Matching Route");
 	}
 	
 	public void addRoute(Route route) {

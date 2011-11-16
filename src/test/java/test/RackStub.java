@@ -21,7 +21,7 @@ public class RackStub implements Rack {
 		for (Map.Entry<String, Object> entry : environment) {
 			recorded.put(entry.getKey(), entry.getValue());
 		}
-		return new RackResponse(200, "Stub " + message);
+		return new RackResponse(200).withBody("Stub " + message);
 	}
 
 	public Object getRecordedValue(String key) {
@@ -35,5 +35,4 @@ public class RackStub implements Rack {
 	public void reset() {
 		recorded = null;
 	}
-
 }
