@@ -1,8 +1,8 @@
 package org.rack4java.route;
 
-import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.rack4java.Context;
 import org.rack4java.Rack;
 import org.rack4java.RackResponse;
 
@@ -20,13 +20,13 @@ public class PathPatternRoute extends AbstractPathRoute {
 		this(handler, pattern, null);
 	}
 
-	@Override public Rack match(Map<String, Object> env) {
+	@Override public Rack match(Context<Object> env) {
 		String path = (String) env.get(Rack.PATH_INFO);
 		if (null == path || null == pattern) return null;
 		return pattern.matcher(path).matches() ? this : null;
 	}
 	
-	@Override public RackResponse call(Map<String, Object> env) throws Exception {
+	@Override public RackResponse call(Context<Object> env)throws Exception {
 		if (null != replacement) {
 			String path = (String) env.get(Rack.PATH_INFO);
 			env.put(ORIGINAL_PATH_INFO, path);

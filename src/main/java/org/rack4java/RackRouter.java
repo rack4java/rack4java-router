@@ -2,7 +2,6 @@ package org.rack4java;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class RackRouter implements Route, Rack {
 	private List<Route> routes;
@@ -13,7 +12,7 @@ public class RackRouter implements Route, Rack {
 		this.dfl = null;
 	}
 
-	@Override public Rack match(Map<String, Object> environment) {
+	@Override public Rack match(Context<Object> environment) {
 		for (Route route : routes) {
 			Rack target = route.match(environment);
 			if (null != target) return target;
@@ -21,7 +20,7 @@ public class RackRouter implements Route, Rack {
 		return dfl;
 	}
 
-	@Override public RackResponse call(Map<String, Object> environment) throws Exception {
+	@Override public RackResponse call(Context<Object> environment) throws Exception {
 		Rack target = match(environment);
 		return null != target 
 			? target.call(environment)

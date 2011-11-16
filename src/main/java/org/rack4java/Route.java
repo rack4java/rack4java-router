@@ -1,6 +1,5 @@
 package org.rack4java;
 
-import java.util.Map;
 
 /** 
  * the interface shared by all route definitions
@@ -15,5 +14,5 @@ import java.util.Map;
  *
  */
 public interface Route {
-	Rack match(Map<String, Object> environment);
+	Rack match(Context<Object> environment);
 }

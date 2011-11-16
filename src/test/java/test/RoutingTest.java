@@ -1,25 +1,25 @@
 package test;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.rack4java.Context;
 import org.rack4java.Rack;
 import org.rack4java.RackResponse;
 import org.rack4java.RackRouter;
+import org.rack4java.context.MapContext;
 import org.rack4java.route.PathPrefixRoute;
 
 public class RoutingTest extends TestCase {
-	Map<String, Object> env;
+	Context<Object> env;
 	RackRouter router;
 	RackResponse response;
 	RackStub ok;
 	RackStub catcher;
 	
 	public void setUp() {
-		env = new HashMap<String, Object>();
+		env = new MapContext<Object>();
 		router = new RackRouter();
 		ok = new RackStub("OK");
 		catcher = new RackStub("huh?");

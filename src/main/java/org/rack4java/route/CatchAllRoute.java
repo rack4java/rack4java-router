@@ -1,7 +1,6 @@
 package org.rack4java.route;
 
-import java.util.Map;
-
+import org.rack4java.Context;
 import org.rack4java.Rack;
 
 public class CatchAllRoute extends AbstractRoute {
@@ -10,7 +9,7 @@ public class CatchAllRoute extends AbstractRoute {
 		super(handler);
 	}
 
-	@Override public Rack match(Map<String, Object> env) {
+	@Override public Rack match(Context<Object> env) {
 		return this;
 	}
 

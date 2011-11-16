@@ -1,7 +1,6 @@
 package org.rack4java.route;
 
-import java.util.Map;
-
+import org.rack4java.Context;
 import org.rack4java.Rack;
 import org.rack4java.RackResponse;
 
@@ -16,13 +15,13 @@ public class PathPrefixRoute extends AbstractPathRoute {
 		this.remove = remove;
 	}
 	
-	@Override public Rack match(Map<String, Object> env) {
+	@Override public Rack match(Context<Object> env) {
 		String path = (String) env.get(Rack.PATH_INFO);
 		if (null == path || null == prefix) return null;
 		return path.startsWith(prefix) ? this : null;
 	}
 	
-	@Override public RackResponse call(Map<String, Object> env) throws Exception {
+	@Override public RackResponse call(Context<Object> env) throws Exception {
 		if (remove) {
 			String path = (String) env.get(Rack.PATH_INFO);
 			env.put(ORIGINAL_PATH_INFO, path);

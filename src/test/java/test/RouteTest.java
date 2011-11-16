@@ -1,26 +1,26 @@
 package test;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
+import org.rack4java.Context;
 import org.rack4java.Rack;
 import org.rack4java.RackResponse;
 import org.rack4java.Route;
+import org.rack4java.context.MapContext;
 import org.rack4java.route.CatchAllRoute;
 import org.rack4java.route.PathPatternRoute;
 import org.rack4java.route.PathPrefixRoute;
 
 public class RouteTest extends TestCase {
-	Map<String, Object> env;
+	Context<Object> env;
 	Route route;
 	RackResponse response;
 	RackStub ok;
 	
 	public void setUp() {
-		env = new HashMap<String, Object>();
+		env = new MapContext<Object>();
 		ok = new RackStub("OK");
 	}
 	

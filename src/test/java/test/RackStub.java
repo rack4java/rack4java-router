@@ -1,23 +1,26 @@
 package test;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import org.rack4java.Context;
 import org.rack4java.Rack;
 import org.rack4java.RackResponse;
+import org.rack4java.context.MapContext;
 
 public class RackStub implements Rack {
 
 	private final String message;
-	private Map<String, Object> recorded;
+	private Context<Object> recorded;
 
 	public RackStub(String message) {
 		this.message = message;
 	}
 
-	@Override public RackResponse call(Map<String, Object> environment) throws Exception {
-		recorded = new HashMap<String, Object>();
-		recorded.putAll(environment);
+	@Override public RackResponse call(Context<Object> environment) throws Exception {
+		recorded = new MapContext<Object>();
+		for (Map.Entry<String, Object> entry : environment) {
+			recorded.put(entry.getKey(), entry.getValue());
+		}
 		return new RackResponse(200, "Stub " + message);
 	}
 
