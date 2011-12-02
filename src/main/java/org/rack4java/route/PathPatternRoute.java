@@ -29,9 +29,9 @@ public class PathPatternRoute extends AbstractPathRoute {
 	@Override public RackResponse call(Context<Object> env)throws Exception {
 		if (null != replacement) {
 			String path = (String) env.get(Rack.PATH_INFO);
-			env.put(ORIGINAL_PATH_INFO, path);
+			env.with(ORIGINAL_PATH_INFO, path);
 			String tail = pattern.matcher(path).replaceAll(replacement);
-			env.put(PATH_INFO, tail);
+			env.with(PATH_INFO, tail);
 		}
 		
 		return super.call(env);

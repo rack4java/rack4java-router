@@ -24,10 +24,10 @@ public class PathPrefixRoute extends AbstractPathRoute {
 	@Override public RackResponse call(Context<Object> env) throws Exception {
 		if (remove) {
 			String path = (String) env.get(Rack.PATH_INFO);
-			env.put(ORIGINAL_PATH_INFO, path);
+			env.with(ORIGINAL_PATH_INFO, path);
 			String tail = path.substring(prefix.length());
 			if (!tail.startsWith("/")) tail = "/" + tail;
-			env.put(PATH_INFO, tail);
+			env.with(PATH_INFO, tail);
 		}
 		
 		return super.call(env);

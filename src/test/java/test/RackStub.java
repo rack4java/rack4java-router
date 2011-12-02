@@ -19,7 +19,7 @@ public class RackStub implements Rack {
 	@Override public RackResponse call(Context<Object> environment) throws Exception {
 		recorded = new MapContext<Object>();
 		for (Map.Entry<String, Object> entry : environment) {
-			recorded.put(entry.getKey(), entry.getValue());
+			recorded.with(entry.getKey(), entry.getValue());
 		}
 		return new RackResponse(200).withBody("Stub " + message);
 	}

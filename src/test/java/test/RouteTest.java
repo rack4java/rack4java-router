@@ -30,15 +30,15 @@ public class RouteTest extends TestCase {
 		// no path specified
 		assertMatch();
 		
-		env.put(Rack.PATH_INFO, "/");
+		env.with(Rack.PATH_INFO, "/");
 		assertMatch();
 		assertEquals("/", ok.getRecordedValue(Rack.PATH_INFO));
 		
-		env.put(Rack.PATH_INFO, "/lala/thing");
+		env.with(Rack.PATH_INFO, "/lala/thing");
 		assertMatch();
 		assertEquals("/lala/thing", ok.getRecordedValue(Rack.PATH_INFO));
 		
-		env.put(Rack.PATH_INFO, "/thing/lala");
+		env.with(Rack.PATH_INFO, "/thing/lala");
 		assertMatch();
 		assertEquals("/thing/lala", ok.getRecordedValue(Rack.PATH_INFO));
 	}
@@ -49,15 +49,15 @@ public class RouteTest extends TestCase {
 		// no path specified
 		assertNoMatch();
 		
-		env.put(Rack.PATH_INFO, "/");
+		env.with(Rack.PATH_INFO, "/");
 		assertMatch();
 		assertEquals("/", ok.getRecordedValue(Rack.PATH_INFO));
 		
-		env.put(Rack.PATH_INFO, "/lala/thing");
+		env.with(Rack.PATH_INFO, "/lala/thing");
 		assertMatch();
 		assertEquals("/lala/thing", ok.getRecordedValue(Rack.PATH_INFO));
 		
-		env.put(Rack.PATH_INFO, "/thing/lala");
+		env.with(Rack.PATH_INFO, "/thing/lala");
 		assertMatch();
 		assertEquals("/thing/lala", ok.getRecordedValue(Rack.PATH_INFO));
 	}
@@ -68,15 +68,15 @@ public class RouteTest extends TestCase {
 		// no path specified
 		assertNoMatch();
 		
-		env.put(Rack.PATH_INFO, "/");
+		env.with(Rack.PATH_INFO, "/");
 		assertMatch();
 		assertEquals("/", ok.getRecordedValue(Rack.PATH_INFO));
 		
-		env.put(Rack.PATH_INFO, "/lala/thing");
+		env.with(Rack.PATH_INFO, "/lala/thing");
 		assertMatch();
 		assertEquals("/lala/thing", ok.getRecordedValue(Rack.PATH_INFO));
 		
-		env.put(Rack.PATH_INFO, "/thing/lala");
+		env.with(Rack.PATH_INFO, "/thing/lala");
 		assertMatch();
 		assertEquals("/thing/lala", ok.getRecordedValue(Rack.PATH_INFO));
 	}
@@ -87,14 +87,14 @@ public class RouteTest extends TestCase {
 		// no path specified
 		assertNoMatch();
 		
-		env.put(Rack.PATH_INFO, "/");
+		env.with(Rack.PATH_INFO, "/");
 		assertNoMatch();
 		
-		env.put(Rack.PATH_INFO, "/lala/thing");
+		env.with(Rack.PATH_INFO, "/lala/thing");
 		assertMatch();
 		assertEquals("/lala/thing", ok.getRecordedValue(Rack.PATH_INFO));
 		
-		env.put(Rack.PATH_INFO, "/thing/lala");
+		env.with(Rack.PATH_INFO, "/thing/lala");
 		assertNoMatch();
 	}
 	
@@ -104,15 +104,15 @@ public class RouteTest extends TestCase {
 		// no path specified
 		assertNoMatch();
 		
-		env.put(Rack.PATH_INFO, "/");
+		env.with(Rack.PATH_INFO, "/");
 		assertNoMatch();
 		
-		env.put(Rack.PATH_INFO, "/lala/thing");
+		env.with(Rack.PATH_INFO, "/lala/thing");
 		assertMatch();
 		assertEquals("/thing", ok.getRecordedValue(Rack.PATH_INFO));
 		assertEquals("/lala/thing", ok.getRecordedValue(PathPrefixRoute.ORIGINAL_PATH_INFO));
 		
-		env.put(Rack.PATH_INFO, "/thing/lala");
+		env.with(Rack.PATH_INFO, "/thing/lala");
 		assertNoMatch();
 	}
 	
@@ -122,14 +122,14 @@ public class RouteTest extends TestCase {
 		// no path specified
 		assertNoMatch();
 		
-		env.put(Rack.PATH_INFO, "/");
+		env.with(Rack.PATH_INFO, "/");
 		assertNoMatch();
 		
-		env.put(Rack.PATH_INFO, "/lala/thing");
+		env.with(Rack.PATH_INFO, "/lala/thing");
 		assertMatch();
 		assertEquals("/lala/thing", ok.getRecordedValue(Rack.PATH_INFO));
 		
-		env.put(Rack.PATH_INFO, "/thing/lala");
+		env.with(Rack.PATH_INFO, "/thing/lala");
 		assertMatch();
 		assertEquals("/thing/lala", ok.getRecordedValue(Rack.PATH_INFO));
 	}
@@ -140,15 +140,15 @@ public class RouteTest extends TestCase {
 		// no path specified
 		assertNoMatch();
 		
-		env.put(Rack.PATH_INFO, "/");
+		env.with(Rack.PATH_INFO, "/");
 		assertNoMatch();
 		
-		env.put(Rack.PATH_INFO, "/lala/thing");
+		env.with(Rack.PATH_INFO, "/lala/thing");
 		assertMatch();
 		assertEquals("/lala", ok.getRecordedValue(Rack.PATH_INFO));
 		assertEquals("/lala/thing", ok.getRecordedValue(PathPrefixRoute.ORIGINAL_PATH_INFO));
 		
-		env.put(Rack.PATH_INFO, "/thing/lala");
+		env.with(Rack.PATH_INFO, "/thing/lala");
 		assertMatch();
 		assertEquals("/lala", ok.getRecordedValue(Rack.PATH_INFO));
 		assertEquals("/thing/lala", ok.getRecordedValue(PathPrefixRoute.ORIGINAL_PATH_INFO));
@@ -160,13 +160,13 @@ public class RouteTest extends TestCase {
 		// no headers specified
 		assertNoMatch();
 		
-		env.put(Rack.HTTP_ + "lala", "12");
+		env.with(Rack.HTTP_ + "lala", "12");
 		assertNoMatch();
 		
-		env.put(Rack.HTTP_ + "X-Mode", "abc");
+		env.with(Rack.HTTP_ + "X-Mode", "abc");
 		assertNoMatch();
 		
-		env.put(Rack.HTTP_ + "X-Mode", "12");
+		env.with(Rack.HTTP_ + "X-Mode", "12");
 		assertMatch();
 		assertEquals("12", ok.getRecordedValue(Rack.HTTP_ + "X-Mode"));
 	}

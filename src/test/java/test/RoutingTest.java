@@ -25,16 +25,20 @@ public class RoutingTest extends TestCase {
 		catcher = new RackStub("huh?");
 	}
 	
+	private String getBodyAsString(RackResponse response) throws IOException {
+		return new String(response.getBodyAsBytes());
+	}
+	
 	public void testNoRouting() throws Exception {
 		check(404, "No Matching Route");
 		
-		env.put(Rack.PATH_INFO, "/");
+		env.with(Rack.PATH_INFO, "/");
 		check(404, "No Matching Route");
 		
-		env.put(Rack.PATH_INFO, "/lala/thing");
+		env.with(Rack.PATH_INFO, "/lala/thing");
 		check(404, "No Matching Route");
 		
-		env.put(Rack.PATH_INFO, "/thing/lala");
+		env.with(Rack.PATH_INFO, "/thing/lala");
 		check(404, "No Matching Route");
 	}
 	
@@ -44,13 +48,13 @@ public class RoutingTest extends TestCase {
 		// no path specified
 		check(200, "Stub OK");
 		
-		env.put(Rack.PATH_INFO, "/");
+		env.with(Rack.PATH_INFO, "/");
 		check(200, "Stub OK");
 		
-		env.put(Rack.PATH_INFO, "/lala/thing");
+		env.with(Rack.PATH_INFO, "/lala/thing");
 		check(200, "Stub OK");
 		
-		env.put(Rack.PATH_INFO, "/thing/lala");
+		env.with(Rack.PATH_INFO, "/thing/lala");
 		check(200, "Stub OK");
 	}
 	
@@ -60,13 +64,13 @@ public class RoutingTest extends TestCase {
 		// no path specified
 		check(404, "No Matching Route");
 		
-		env.put(Rack.PATH_INFO, "/");
+		env.with(Rack.PATH_INFO, "/");
 		check(200, "Stub OK");
 		
-		env.put(Rack.PATH_INFO, "/lala/thing");
+		env.with(Rack.PATH_INFO, "/lala/thing");
 		check(200, "Stub OK");
 		
-		env.put(Rack.PATH_INFO, "/thing/lala");
+		env.with(Rack.PATH_INFO, "/thing/lala");
 		check(200, "Stub OK");
 	}
 	
@@ -79,17 +83,17 @@ public class RoutingTest extends TestCase {
 		assertFalse(ok.wasCalled());
 		assertEquals(null, catcher.getRecordedValue(Rack.PATH_INFO));
 		
-		env.put(Rack.PATH_INFO, "/");
+		env.with(Rack.PATH_INFO, "/");
 		check(200, "Stub huh?");
 		assertFalse(ok.wasCalled());
 		assertEquals("/", catcher.getRecordedValue(Rack.PATH_INFO));
 		
-		env.put(Rack.PATH_INFO, "/lala/thing");
+		env.with(Rack.PATH_INFO, "/lala/thing");
 		check(200, "Stub OK");
 		assertFalse(catcher.wasCalled());
 		assertEquals("/lala/thing", ok.getRecordedValue(Rack.PATH_INFO));
 		
-		env.put(Rack.PATH_INFO, "/thing/lala");
+		env.with(Rack.PATH_INFO, "/thing/lala");
 		check(200, "Stub huh?");
 	}
 	
@@ -102,17 +106,17 @@ public class RoutingTest extends TestCase {
 		assertFalse(ok.wasCalled());
 		assertEquals(null, catcher.getRecordedValue(Rack.PATH_INFO));
 		
-		env.put(Rack.PATH_INFO, "/");
+		env.with(Rack.PATH_INFO, "/");
 		check(200, "Stub huh?");
 		assertFalse(ok.wasCalled());
 		assertEquals("/", catcher.getRecordedValue(Rack.PATH_INFO));
 		
-		env.put(Rack.PATH_INFO, "/lala/thing");
+		env.with(Rack.PATH_INFO, "/lala/thing");
 		check(200, "Stub OK");
 		assertFalse(catcher.wasCalled());
 		assertEquals("/lala/thing", ok.getRecordedValue(Rack.PATH_INFO));
 		
-		env.put(Rack.PATH_INFO, "/thing/lala");
+		env.with(Rack.PATH_INFO, "/thing/lala");
 		check(200, "Stub huh?");
 	}
 
@@ -121,6 +125,6 @@ public class RoutingTest extends TestCase {
 		catcher.reset();
 		response = router.call(env);
 		assertEquals(expectedStatus, response.getStatus());
-		assertEquals(expectedMessage, response.getString());
+		assertEquals(expectedMessage, getBodyAsString(response));
 	}
 }
