@@ -4,7 +4,6 @@ import java.util.regex.Pattern;
 
 import org.rack4java.Context;
 import org.rack4java.Rack;
-import org.rack4java.RackResponse;
 
 public class PathPatternRoute extends AbstractPathRoute {
 	private Pattern pattern;
@@ -26,14 +25,10 @@ public class PathPatternRoute extends AbstractPathRoute {
 		return pattern.matcher(path).matches() ? this : null;
 	}
 	
-	@Override public RackResponse call(Context<Object> env)throws Exception {
-		if (null != replacement) {
-			String path = (String) env.get(Rack.PATH_INFO);
-			env.with(ORIGINAL_PATH_INFO, path);
-			String tail = pattern.matcher(path).replaceAll(replacement);
-			env.with(PATH_INFO, tail);
-		}
-		
-		return super.call(env);
+	@Override protected Context<Object> adjust(Context<Object> env) {
+		if (null != replacement) return push(env)
+				.with(PATH_INFO, pattern.matcher((String)env.get(PATH_INFO)).replaceAll(replacement));
+	
+		return env;
 	}
 }

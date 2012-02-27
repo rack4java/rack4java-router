@@ -13,4 +13,8 @@ public class CatchAllRoute extends AbstractRoute {
 		return this;
 	}
 
+	@Override protected Context<Object> adjust(Context<Object> env) {
+		return env;
+	}
+
 }

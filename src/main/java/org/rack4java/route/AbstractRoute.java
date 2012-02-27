@@ -13,6 +13,8 @@ public abstract class AbstractRoute implements Route, Rack {
 	}
 	
 	@Override public RackResponse call(Context<Object> env) throws Exception {
-		return handler.call(env);
+		return handler.call(adjust(env));
 	}
+	
+	protected abstract Context<Object> adjust(Context<Object> env);
 }

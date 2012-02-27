@@ -1,11 +1,8 @@
 package test;
 
-import java.util.Map;
-
 import org.rack4java.Context;
 import org.rack4java.Rack;
 import org.rack4java.RackResponse;
-import org.rack4java.context.MapContext;
 
 public class RackStub implements Rack {
 
@@ -17,10 +14,7 @@ public class RackStub implements Rack {
 	}
 
 	@Override public RackResponse call(Context<Object> environment) throws Exception {
-		recorded = new MapContext<Object>();
-		for (Map.Entry<String, Object> entry : environment) {
-			recorded.with(entry.getKey(), entry.getValue());
-		}
+		recorded = environment;
 		return new RackResponse(200).withBody("Stub " + message);
 	}
 

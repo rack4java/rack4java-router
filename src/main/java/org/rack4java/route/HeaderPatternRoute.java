@@ -1,10 +1,9 @@
-package test;
+package org.rack4java.route;
 
 import java.util.regex.Pattern;
 
 import org.rack4java.Context;
 import org.rack4java.Rack;
-import org.rack4java.route.AbstractRoute;
 
 public class HeaderPatternRoute extends AbstractRoute {
 	
@@ -21,6 +20,10 @@ public class HeaderPatternRoute extends AbstractRoute {
 		String header = (String) environment.get(HTTP_ + headerName);
 		if (null == header) return null;
 		return pattern.matcher(header).matches() ? this : null;
+	}
+
+	@Override protected Context<Object> adjust(Context<Object> env) {
+		return env;
 	}
 
 }

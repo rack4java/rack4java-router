@@ -10,6 +10,7 @@ import org.rack4java.RackResponse;
 import org.rack4java.Route;
 import org.rack4java.context.MapContext;
 import org.rack4java.route.CatchAllRoute;
+import org.rack4java.route.HeaderPatternRoute;
 import org.rack4java.route.PathPatternRoute;
 import org.rack4java.route.PathPrefixRoute;
 
