@@ -12,7 +12,7 @@ public class RackRouter implements Route, Rack {
 		this.dfl = null;
 	}
 
-	@Override public Rack match(Context<Object> environment) {
+	@Override public Rack match(Context<String> environment) {
 		for (Route route : routes) {
 			Rack target = route.match(environment);
 			if (null != target) return target;
@@ -20,7 +20,7 @@ public class RackRouter implements Route, Rack {
 		return dfl;
 	}
 
-	@Override public RackResponse call(Context<Object> environment) throws Exception {
+	@Override public Context<String> call(Context<String> environment) throws Exception {
 		Rack target = match(environment);
 		return null != target 
 			? target.call(environment)

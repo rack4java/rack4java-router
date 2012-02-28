@@ -14,15 +14,15 @@ public class PathPrefixRoute extends AbstractPathRoute {
 		this.remove = remove;
 	}
 	
-	@Override public Rack match(Context<Object> env) {
-		String path = (String) env.get(Rack.PATH_INFO);
+	@Override public Rack match(Context<String> env) {
+		String path = env.get(Rack.PATH_INFO);
 		if (null == path || null == prefix) return null;
 		return path.startsWith(prefix) ? this : null;
 	}
 
-	@Override protected Context<Object> adjust(Context<Object> env) {
+	@Override protected Context<String> adjust(Context<String> env) {
 		if (remove) {
-			String tail = ((String) env.get(Rack.PATH_INFO)).substring(prefix.length());
+			String tail = env.get(Rack.PATH_INFO).substring(prefix.length());
 			if (!tail.startsWith("/")) tail = "/" + tail;
 			return push(env).with(PATH_INFO, tail);
 		}

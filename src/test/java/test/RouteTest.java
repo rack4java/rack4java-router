@@ -15,13 +15,13 @@ import org.rack4java.route.PathPatternRoute;
 import org.rack4java.route.PathPrefixRoute;
 
 public class RouteTest extends TestCase {
-	Context<Object> env;
+	Context<String> env;
 	Route route;
 	RackResponse response;
 	RackStub ok;
 	
 	public void setUp() {
-		env = new MapContext<Object>();
+		env = new MapContext<String>();
 		ok = new RackStub("OK");
 	}
 	

@@ -7,13 +7,13 @@ import org.rack4java.RackResponse;
 public class RackStub implements Rack {
 
 	private final String message;
-	private Context<Object> recorded;
+	private Context<String> recorded;
 
 	public RackStub(String message) {
 		this.message = message;
 	}
 
-	@Override public RackResponse call(Context<Object> environment) throws Exception {
+	@Override public Context<String> call(Context<String> environment) throws Exception {
 		recorded = environment;
 		return new RackResponse(200).withBody("Stub " + message);
 	}

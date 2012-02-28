@@ -16,13 +16,13 @@ public class HeaderPatternRoute extends AbstractRoute {
 		this.pattern = pattern;
 	}
 
-	@Override public Rack match(Context<Object> environment) {
-		String header = (String) environment.get(HTTP_ + headerName);
+	@Override public Rack match(Context<String> environment) {
+		String header = environment.get(HTTP_ + headerName);
 		if (null == header) return null;
 		return pattern.matcher(header).matches() ? this : null;
 	}
 
-	@Override protected Context<Object> adjust(Context<Object> env) {
+	@Override protected Context<String> adjust(Context<String> env) {
 		return env;
 	}
 

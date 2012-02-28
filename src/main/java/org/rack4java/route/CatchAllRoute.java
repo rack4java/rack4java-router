@@ -9,11 +9,11 @@ public class CatchAllRoute extends AbstractRoute {
 		super(handler);
 	}
 
-	@Override public Rack match(Context<Object> env) {
+	@Override public Rack match(Context<String> env) {
 		return this;
 	}
 
-	@Override protected Context<Object> adjust(Context<Object> env) {
+	@Override protected Context<String> adjust(Context<String> env) {
 		return env;
 	}
 

@@ -15,20 +15,20 @@ public abstract class AbstractPathRoute extends AbstractRoute {
 		super(handler);
 	}
 	
-	@SuppressWarnings("unchecked") protected Context<Object> push(Context<Object> env) {
-		return new FallbackContext<Object>(new MapContext<Object>(), env)
-			.with(ORIGINAL_SCRIPT_NAME, (String) env.get(Rack.SCRIPT_NAME))
-			.with(ORIGINAL_PATH_INFO, (String) env.get(Rack.PATH_INFO))
-			.with(ORIGINAL_QUERY_STRING, (String) env.get(Rack.QUERY_STRING));
+	@SuppressWarnings("unchecked") protected Context<String> push(Context<String> env) {
+		return new FallbackContext<String>(new MapContext<String>(), env)
+			.with(ORIGINAL_SCRIPT_NAME, env.get(Rack.SCRIPT_NAME))
+			.with(ORIGINAL_PATH_INFO, env.get(Rack.PATH_INFO))
+			.with(ORIGINAL_QUERY_STRING, env.get(Rack.QUERY_STRING));
 	}
 	
-	protected String getFullPath(Context<Object> env) {
-		return (String)env.get(SCRIPT_NAME) + (String)env.get(PATH_INFO);
+	protected String getFullPath(Context<String> env) {
+		return env.get(SCRIPT_NAME) + env.get(PATH_INFO);
 	}
 	
-	protected String getFullResource(Context<Object> env) {
+	protected String getFullResource(Context<String> env) {
 		String path = getFullPath(env);
-		String query = (String)env.get(QUERY_STRING);
+		String query = env.get(QUERY_STRING);
 		if (null != query && query.length() > 0) path += "?" + query;
 		return path;
 	}

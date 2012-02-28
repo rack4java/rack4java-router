@@ -6,27 +6,36 @@ import junit.framework.TestCase;
 
 import org.rack4java.Context;
 import org.rack4java.Rack;
-import org.rack4java.RackResponse;
+import org.rack4java.RackBody;
 import org.rack4java.RackRouter;
 import org.rack4java.context.MapContext;
 import org.rack4java.route.PathPrefixRoute;
 
 public class RoutingTest extends TestCase {
-	Context<Object> env;
+	Context<String> env;
 	RackRouter router;
-	RackResponse response;
+	Context<String> response;
 	RackStub ok;
 	RackStub catcher;
 	
 	public void setUp() {
-		env = new MapContext<Object>();
+		env = new MapContext<String>();
 		router = new RackRouter();
 		ok = new RackStub("OK");
 		catcher = new RackStub("huh?");
 	}
 	
-	private String getBodyAsString(RackResponse response) throws IOException {
-		return new String(response.getBodyAsBytes());
+	private RackBody getBody(Context<String> response) {
+		RackBody body = (RackBody) response.getObject(Rack.RESPONSE_BODY);
+		return body;
+	}
+
+	private String getBodyAsString(Context<String> response) {
+		StringBuilder ret = new StringBuilder();
+		for (byte[] chunk : getBody(response).getBodyAsBytes()) {
+			ret.append(new String(chunk));
+		}
+		return ret.toString();
 	}
 	
 	public void testNoRouting() throws Exception {
@@ -124,7 +133,7 @@ public class RoutingTest extends TestCase {
 		ok.reset();
 		catcher.reset();
 		response = router.call(env);
-		assertEquals(expectedStatus, response.getStatus());
+		assertEquals(expectedStatus, response.get(Rack.RESPONSE_STATUS));
 		assertEquals(expectedMessage, getBodyAsString(response));
 	}
 }

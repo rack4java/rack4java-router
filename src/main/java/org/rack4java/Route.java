@@ -14,5 +14,5 @@ package org.rack4java;
  *
  */
 public interface Route {
-	Rack match(Context<Object> environment);
+	Rack match(Context<String> environment);
 }

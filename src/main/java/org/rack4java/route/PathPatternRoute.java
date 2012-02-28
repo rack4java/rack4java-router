@@ -19,15 +19,15 @@ public class PathPatternRoute extends AbstractPathRoute {
 		this(handler, pattern, null);
 	}
 
-	@Override public Rack match(Context<Object> env) {
-		String path = (String) env.get(Rack.PATH_INFO);
+	@Override public Rack match(Context<String> env) {
+		String path = env.get(Rack.PATH_INFO);
 		if (null == path || null == pattern) return null;
 		return pattern.matcher(path).matches() ? this : null;
 	}
 	
-	@Override protected Context<Object> adjust(Context<Object> env) {
+	@Override protected Context<String> adjust(Context<String> env) {
 		if (null != replacement) return push(env)
-				.with(PATH_INFO, pattern.matcher((String)env.get(PATH_INFO)).replaceAll(replacement));
+				.with(PATH_INFO, pattern.matcher(env.get(PATH_INFO)).replaceAll(replacement));
 	
 		return env;
 	}
