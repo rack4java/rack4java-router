@@ -26,7 +26,7 @@ public class RoutingTest extends TestCase {
 	}
 	
 	private RackBody getBody(Context<String> response) {
-		RackBody body = (RackBody) response.getObject(Rack.RESPONSE_BODY);
+		RackBody body = (RackBody) response.getObject(Rack.MESSAGE_BODY);
 		return body;
 	}
 
@@ -133,7 +133,7 @@ public class RoutingTest extends TestCase {
 		ok.reset();
 		catcher.reset();
 		response = router.call(env);
-		assertEquals(expectedStatus, response.get(Rack.RESPONSE_STATUS));
+		assertEquals(expectedStatus, response.get(Rack.MESSAGE_STATUS));
 		assertEquals(expectedMessage, getBodyAsString(response));
 	}
 }
